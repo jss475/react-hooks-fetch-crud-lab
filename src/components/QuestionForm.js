@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function QuestionForm(props) {
   const [formData, setFormData] = useState({
@@ -16,11 +16,48 @@ function QuestionForm(props) {
       [event.target.name]: event.target.value,
     });
   }
-
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    
+    //add a useeffect to post the new form into the databse
+    
+
+    let eventFormData = {
+      prompt: event.target.prompt.value,
+      answer1: event.target.answer1.value,
+      answer2: event.target.answer2.value,
+      answer3: event.target.answer3.value,
+      answer4: event.target.answer4.value,
+      correctIndex: event.target.correctIndex.value,
+    }
+    
+    let modObj = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'prompt': event.target.prompt.value,
+        'answers': [event.target.answer1.value, event.target.answer2.value, event.target.answer3.value, event.target.answer4.value],
+        'correctIndex': event.target.correctIndex.value
+      })
+    }
+
+    // 'prompt': formData.prompt,
+        // 'answers': [formData.answer1, formData.answer2, formData.answer3, formData.answer4],
+        // 'correctIndex': formData.correctIndex
+    
+    console.log(modObj)
+    //POST the data into database
+    
+    fetch('http://localhost:4000/questions', modObj)
+       .then(r => r.json())
+       
   }
+
+
+  
+ 
 
   return (
     <section>
